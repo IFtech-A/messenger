@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+}
+
+#user-list {
+  width: 50%;
+  padding: 0;
+  overflow: auto;
+}
+#user-list h1 {
+  color: "#ddd";
+  text-align: left;
+  margin-left: 20px;
+}
+#user-list li {
+  display: block;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid #880E4f;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+  color: #880E4f;
+}
