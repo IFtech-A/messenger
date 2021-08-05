@@ -8,6 +8,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func createUser(p graphql.ResolveParams) (interface{}, error) {
@@ -55,4 +56,50 @@ func createMessage(p graphql.ResolveParams) (interface{}, error) {
 func deleteRoom(p graphql.ResolveParams) (interface{}, error) {
 	roomID := p.Args["id"].(string)
 	return roomID, store.DeleteRoom(roomID)
+}
+func updateRoom(p graphql.ResolveParams) (interface{}, error) {
+	roomID := p.Args["id"].(string)
+	room, err := store.ReadRoom(roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	updater := bson.M{}
+	if name, ok := p.Args["name"].(string); ok {
+		updater["name"] = name
+	}
+	if desc, ok := p.Args["desc"].(string); ok {
+		updater["desc"] = desc
+	}
+	if photo, ok := p.Args["photo"].(string); ok {
+		updater["photo"] = photo
+	}
+
+	err = store.UpdateRoom(roomID, updater)
+	if err != nil {
+		return nil, err
+	}
+	return room, nil
+}
+
+func addUserToRoom(p graphql.ResolveParams) (interface{}, error) {
+	roomID := p.Args["id"].(string)
+	room, err := store.ReadRoom(roomID)
+	if err != nil {
+		return nil, err
+	}
+	newUser := p.Args["user_id"].(string)
+	for i := range room.Members {
+		if newUser == room.Members[i] {
+			logger.Info("User already in romm", newUser, room.Members)
+			return room, nil
+		}
+	}
+	room.Members = append(room.Members, newUser)
+
+	err = store.UpdateRoom(roomID, bson.M{"members": room.Members})
+	if err != nil {
+		return nil, err
+	}
+	return room, nil
 }
