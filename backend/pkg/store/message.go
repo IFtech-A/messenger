@@ -33,10 +33,35 @@ func (s *Store) CreateMessage(message *model.Message) (*model.Message, error) {
 	return message, nil
 }
 
+func ReadRoomLastMessage(roomID string) (*model.Message, error) {
+	return s.ReadRoomLastMessage(roomID)
+}
+func (s *Store) ReadRoomLastMessage(roomID string) (*model.Message, error) {
+	collection := s.client.Database(s.conf.DBName).Collection(CollectionMessages)
+
+	ctx, cancel := s.ContextWithTimeout()
+	defer cancel()
+
+	lastMessage := new(model.Message)
+	err := collection.FindOne(ctx, bson.M{"room_id": roomID}, &options.FindOneOptions{
+		Sort: bson.M{"created_at": -1},
+	}).Decode(lastMessage)
+
+	if err != nil {
+		switch {
+		case err == mongo.ErrNoDocuments:
+			return nil, ErrNoDocuments
+		default:
+			return nil, err
+		}
+	}
+
+	return lastMessage, nil
+}
+
 func ReadRoomMessages(roomID string) ([]*model.Message, error) {
 	return s.ReadRoomMessages(roomID)
 }
-
 func (s *Store) ReadRoomMessages(roomID string) ([]*model.Message, error) {
 	var messages []*model.Message
 	collection := s.client.Database(s.conf.DBName).Collection(CollectionMessages)

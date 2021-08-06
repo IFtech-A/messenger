@@ -5,6 +5,7 @@ import (
 	"backend/pkg/store"
 
 	"github.com/graphql-go/graphql"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -87,6 +88,27 @@ var RoomType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"updated_at": &graphql.Field{
 			Type: graphql.DateTime,
+		},
+		"lastMessage": &graphql.Field{
+			Type: MessageType,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				if room, ok := p.Source.(*model.Room); ok {
+					logrus.Info("find last message of room:", room.ID)
+					message, err := store.ReadRoomLastMessage(room.ID)
+					if err != nil {
+						logrus.Error(err)
+						if err == store.ErrNoDocuments {
+							return nil, nil
+						} else {
+							return nil, err
+						}
+					} else {
+						return message, nil
+					}
+				} else {
+					return nil, nil
+				}
+			},
 		},
 		"messages": &graphql.Field{
 			Type: graphql.NewList(MessageType),
