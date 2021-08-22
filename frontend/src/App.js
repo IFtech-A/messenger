@@ -4,11 +4,11 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-import UserList from './components/User/UserList';
+// import UserList from './components/User/UserList';
 import RoomList from './components/Room/RoomList';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
+  uri: 'http://localhost:8080/query',
   cache: new InMemoryCache(),
 })
 
@@ -16,10 +16,10 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-    <div className="App">
-      <RoomList/>
-      <UserList />
-    </div>
+      <div className="App">
+        <RoomList />
+        {/* <UserList /> */}
+      </div>
     </ApolloProvider>
   );
 }

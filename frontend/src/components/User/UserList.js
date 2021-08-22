@@ -19,10 +19,10 @@ const UserList = () => {
     }
 
     return (
-    <div id="user-list">
+    <div className="list" id="user-list">
         <h1>Users</h1>
         <ul >
-          {data.users.map(user => <li key={user.id} onClick={() => onUserSelect(user.id)}>{user.name}</li>)}
+          {data.userReadAll.map(user => <li key={user.id} onClick={() => onUserSelect(user.id)}>{user.name}</li>)}
         </ul>
         {userSelected && <UserDetails user_id={userSelected} />}
     </div>

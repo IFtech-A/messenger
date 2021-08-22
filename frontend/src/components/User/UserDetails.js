@@ -15,11 +15,11 @@ const UserDetails = ({user_id}) => {
     }
 
     return (
-    <div id="user-details">
+    <div className="list" id="user-details">
         <h1>UserDetails</h1>
-        <p>{data.user.name}</p>
+        <p>{data.userReadOne.name}</p>
         <ul>
-            {data.user.rooms.map(room => <li key={room.ID}>{room.name}</li>)}
+            {data.userReadOne.rooms.map(room => <li key={room.ID}>{room.title}</li>)}
         </ul>
     </div>
     );

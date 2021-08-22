@@ -4,7 +4,7 @@ import { getAllRooms } from '../../queries/queries';
 import RoomDetails from './RoomDetails';
 
 const RoomList = () => {
-    const {loading, error, data} = useQuery(getAllRooms);
+    const { loading, error, data } = useQuery(getAllRooms);
     const [roomSelected, setRoomSelected] = useState();
 
     if (loading) {
@@ -19,13 +19,17 @@ const RoomList = () => {
     }
 
     return (
-    <div id="user-list">
-        <h1>Rooms</h1>
-        <ul >
-          {data.rooms.map(room => <li key={room.id} onClick={() => onRoomSelect(room.id)}>{room.name}</li>)}
-        </ul>
-        {roomSelected && <RoomDetails room_id={roomSelected} />}
-    </div>
+        <div className="opening-list">
+            <div className="list" id="user-list">
+                <h1>Rooms</h1>
+                <ul >
+                    {data.roomReadAll.map(room => <li key={room.id} onClick={() => onRoomSelect(room.id)}>{room.title}</li>)}
+                </ul>
+            </div>
+            <div style={{width:"50%"}}>
+                {roomSelected && <RoomDetails room_id={roomSelected} />}
+            </div>
+        </div>
     );
 }
 

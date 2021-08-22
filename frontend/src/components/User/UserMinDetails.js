@@ -16,7 +16,7 @@ const UserMinDetails = ({user_id}) => {
 
     return (
     <div id="user-details">
-        <p>{data.user.name}</p>
+        <p>{data.userReadOne.name}</p>
     </div>
     );
 };
