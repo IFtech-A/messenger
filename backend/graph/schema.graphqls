@@ -1,0 +1,81 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+type Message {
+  id: ID!
+  roomID: ID!
+  userID: ID!
+  content: String!
+  createdAt: String!
+}
+
+type Picture {
+  id: ID!
+  link: String!
+  filename: String!
+}
+
+type Room {
+  id: ID!
+  members: [ID]!
+  title: String!
+  desc: String!
+  mainPicture: Picture
+  pictures: [Picture!]!
+  createdAt: String!
+  updatedAt: String!
+  lastMessage: Message
+  messages: [Message!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+  rooms: [Room!]!
+}
+
+type Query {
+  roomReadOne(id: ID!): Room!
+  roomReadAll(userID: ID): [Room!]!
+  roomReadMessages(id: ID!): [Message!]!
+
+  userReadOne(id: ID!): User!
+  userReadAll(name: String): [User!]!
+  userReadRooms(id: ID!): [Room!]!
+}
+
+input NewUser {
+  name: String!
+}
+input NewRoom {
+  id: ID!
+  members: [ID!]!
+  title: String!
+  desc: String!
+}
+input NewMessage {
+  roomID: ID!
+  userID: ID!
+  content: String!
+  createdAt: String!
+}
+
+type Mutation {
+
+  createUser(input: NewUser!): User
+
+  createRoom(input: NewRoom!): Room
+  updateRoom(input: NewRoom!): Room
+  updateRoomAddUser(roomID: ID!, userID: ID!): Room
+  deleteRoom(id: ID!): Room
+
+  createMessage(input: NewMessage!): Message
+}
+
+type Subscription {
+  onMessageCreate(roomID: ID!): Message!
+}

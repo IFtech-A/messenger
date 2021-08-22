@@ -11,12 +11,10 @@ type Room struct {
 	Type        string    `json:"type" bson:"type"`
 	InviteLink  string    `json:"invite_link" bson:"invite_link"`
 	Code        string    `json:"code" bson:"code"`
-	Name        string    `json:"name" bson:"name"`
+	Title       string    `json:"title" bson:"title"`
 	Description string    `json:"desc" bson:"desc"`
-	PhotoMain   string    `json:"photo_main" bson:"photo_main"`
-	Photos      []string  `json:"photos" bson:"photos"`
-	CreatedAt   time.Time `json:"created_at" bson:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at" bson:"updated_at"`
+	CreatedAt   time.Time `json:"createdAt" bson:"created_at"`
+	UpdatedAt   time.Time `json:"updatedAt" bson:"updated_at"`
 }
 
 func (r *Room) String() string {
@@ -24,7 +22,7 @@ func (r *Room) String() string {
 
 	sb.WriteString("ChatRoom -> ")
 	sb.WriteString("Name: ")
-	sb.WriteString(r.Name)
+	sb.WriteString(r.Title)
 	sb.WriteString(" | Description: ")
 	sb.WriteString(r.Description)
 	sb.WriteString(" | Invite Link: ")
@@ -35,4 +33,11 @@ func (r *Room) String() string {
 	sb.WriteString(r.CreatedAt.Local().Format("Mon Jan 2 15:04:05"))
 
 	return sb.String()
+}
+
+type NewRoom struct {
+	ID      string   `json:"id"`
+	Members []string `json:"members"`
+	Title   string   `json:"title"`
+	Desc    string   `json:"desc"`
 }

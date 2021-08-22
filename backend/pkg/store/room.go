@@ -13,20 +13,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreateRoom(room *model.Room) error {
+func CreateRoom(room *model.Room) (*model.Room, error) {
 	return s.CreateRoom(room)
 }
 
-func (s *Store) CreateRoom(room *model.Room) error {
+func (s *Store) CreateRoom(room *model.Room) (*model.Room, error) {
 	collection := s.client.Database(s.conf.DBName).Collection(CollectionChatRooms)
+	room.CreatedAt = time.Now()
+	room.UpdatedAt = time.Now()
 	res, err := collection.InsertOne(context.TODO(), room)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	room.ID = res.InsertedID.(primitive.ObjectID).Hex()
 	logrus.Info("created room: ", room.ID)
 
-	return nil
+	return room, nil
 }
 
 func ReadRoom(id string) (*model.Room, error) {
