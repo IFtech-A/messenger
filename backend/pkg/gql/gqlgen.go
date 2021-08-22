@@ -5,11 +5,11 @@ import (
 	"backend/graph/generated"
 	"backend/pkg/store"
 	"log"
-	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 )
 
@@ -42,9 +42,9 @@ func (s *Server) Start() error {
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	s.server.Any("/", echo.WrapHandler(playground.Handler("GraphQL playground", "/query")))
+	s.server.Any("/query", echo.WrapHandler(srv), middleware.CORS())
 
 	log.Printf("connect to http://%v/ for GraphQL playground", s.config.Addr)
-	return http.ListenAndServe(s.config.Addr, nil)
+	return s.server.Start(s.config.Addr)
 }
