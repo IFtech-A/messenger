@@ -24,6 +24,24 @@ export const splitLink = split(
   httpLink,
 );
 
+export const createUser = gql`
+  mutation CreateUser($newUser: NewUser!) {
+    createUser(input: $newUser) {
+      id
+      name
+    }
+  }
+`
+
+export const loginByName = gql`
+  mutation login($name: String!) {
+    login(username: $name) {
+      id
+      name
+    }
+  }
+`
+
 export const getAllUsers = gql`
     query AllUsers{
         userReadAll {
