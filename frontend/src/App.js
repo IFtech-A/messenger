@@ -4,11 +4,11 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-// import UserList from './components/User/UserList';
 import RoomList from './components/Room/RoomList';
+import { splitLink } from './queries/queries';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/query',
+  link: splitLink,
   cache: new InMemoryCache(),
 })
 
@@ -18,7 +18,6 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <RoomList />
-        {/* <UserList /> */}
       </div>
     </ApolloProvider>
   );

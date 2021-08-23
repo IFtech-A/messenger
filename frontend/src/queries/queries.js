@@ -1,6 +1,30 @@
-import { gql } from "@apollo/client";
+import { gql, split, HttpLink } from "@apollo/client";
+import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from '@apollo/client/link/ws';
 
-const getAllUsers = gql`
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:8080/subscriptions',
+  options: {
+    reconnect: true
+  }
+});
+const httpLink = new HttpLink({
+  uri: 'http://localhost:8080/query'
+});
+
+export const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+
+export const getAllUsers = gql`
     query AllUsers{
         userReadAll {
             id
@@ -9,7 +33,7 @@ const getAllUsers = gql`
   }
 `;
 
-const getUser = gql`
+export const getUser = gql`
   query FindUser($user_id: ID!){
       userReadOne(id:$user_id) {
         id  
@@ -21,7 +45,7 @@ const getUser = gql`
       }
   }
 `
-const getUserMin = gql`
+export const getUserMin = gql`
   query FindUser($user_id: ID!){
     userReadOne(id:$user_id) {
         id  
@@ -30,7 +54,7 @@ const getUserMin = gql`
   }
 `
 
-const getAllRooms = gql`
+export const getAllRooms = gql`
   query AllRooms {
     roomReadAll {
         id
@@ -39,9 +63,9 @@ const getAllRooms = gql`
   }
 `
 
-const getRoom = gql`
-query FindRoom($room_id: ID!){
-    roomReadOne(id: $room_id) {
+export const getRoom = gql`
+query FindRoom($id: ID!){
+    roomReadOne(id: $id) {
         id
         title
         members
@@ -55,7 +79,7 @@ query FindRoom($room_id: ID!){
 }
 `
 
-const createMessage = gql`
+export const createMessage = gql`
 mutation MakeMessage($newMessage: NewMessage!) {
     createMessage(input: $newMessage) {
         id
@@ -67,4 +91,13 @@ mutation MakeMessage($newMessage: NewMessage!) {
 }
 `
 
-export { getAllUsers, getUser, getUserMin, getAllRooms, getRoom, createMessage};
+export const onCreateMessage = gql`
+  subscription OnCreateMessage($id: ID!) {
+    onMessageCreate(roomID: $id) {
+      id
+      userID
+      content
+      createdAt
+    }
+  }
+`

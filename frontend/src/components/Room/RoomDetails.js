@@ -1,103 +1,74 @@
-import React from 'react';
-import { useMutation, useQuery } from "@apollo/client";
-import { getRoom, createMessage } from '../../queries/queries';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
+import { getRoom, createMessage, onCreateMessage } from '../../queries/queries';
 import UserMinDetails from '../User/UserMinDetails';
+import { Message } from '../Message/Message';
 
-const RoomDetails = ({room_id}) => {
-    const {loading, error, data} = useQuery(getRoom, {
-        variables: {room_id},
-    });
+const RoomDetails = ({ id, title }) => {
+    //queries
+    const { loading, data } = useQuery(getRoom, { variables: { id } });
+    const { data: subData, loading: subLoading } = useSubscription(onCreateMessage, { variables: { id } });
+    const [createMessageFunc] = useMutation(createMessage)
 
-    
-    const [createMessageFunc, {creating, createError}] = useMutation(createMessage, {
-        // update: (cache, result) => {
-        //     const newMessage = result.data.message.create;
-        //     const cachedData = cache.readQuery({
-        //         query: getRoom, variables: {room_id: newMessage.room_id}
-        //     });
-        //     if (cachedData === null) {
-        //         const room = {
-        //             readOne: {
-        //                 messages: [newMessage]
-        //             }
-        //         }
-        //         cache.writeQuery({
-        //             query: getRoom,
-        //             variables: {
-        //                 room_id: newMessage.room_id,
-        //             },
-        //             data: {
-        //                 room: room, 
-        //             }
-        //         })
-        //     } else {
-        //         cache.writeQuery({
-        //             query: getRoom,
-        //             variables: {
-        //                 room_id: newMessage.room_id,
-        //             },
-        //             data: {
-        //                 room : {
-        //                     readOne: {
-        //                         ...cachedData.room.readOne,
-        //                         messages: [...cachedData.room.readOne.messages, newMessage] 
-        //                     }
-        //                 }
-        //             }
-        //         })
-        //     }
-        // },
-        refetchQueries:[getRoom]
-        
-    })
+    //States
+    const [room, setRoom] = useState({ id, title, members: [] })
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("")
+
+
+    useEffect(() => {
+        if (!loading) {
+            if (data?.roomReadOne) setRoom(room => { return { ...room, members: data.roomReadOne.members, title: data.roomReadOne.title } })
+            if (data?.roomReadOne.messages) setMessages(m => [...m, ...data.roomReadOne.messages])
+        }
+        return () => setMessages(() => []);
+    }, [loading, data?.roomReadOne]);
+
+    useEffect(() => {
+        if (!subLoading && subData?.onMessageCreate) setMessages(m => [...m, subData.onMessageCreate])
+    }, [subData?.onMessageCreate, subLoading])
+
+    const sendMessage = (e) => {
+        e.preventDefault();
+        if (newMessage === "") {
+            return;
+        }
+
+        createMessageFunc({
+            variables: {
+                newMessage: {
+                    content: newMessage,
+                    roomID: id,
+                    userID: room.members[0],
+                    createdAt: new Date()
+                }
+            }
+        });
+        setNewMessage(() => "");
+    }
 
     if (loading) {
-        return <p>Loading...</p>;
-    }
-    if (error) {
-        return <p>Error: {error.message}</p>;
-    }
+        return <div>Loading...</div>
+    } else {
+        return (
 
-    const sendMessage = (event) => {
-        event.preventDefault();
+            <div className="list" style={{ width: "100%" }} id="room-details">
+                <h1>RoomDetails</h1>
+                <p>{title}</p>
+                <ul>
+                    {room.members.map(member => <li key={member}><UserMinDetails userID={member} /></li>)}
+                </ul>
+                <ul id="message-list">
+                    {messages.map(message => <li key={message.id}><Message {...message} /></li>)}
+                </ul>
+                <div className="message-input">
+                    <input type="text" id="message" value={newMessage} onInput={(e) => setNewMessage(() => e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') { sendMessage(e); } }} />
+                    <div onClick={sendMessage}>Send</div>
+                </div>
 
-        const inputElement = document.getElementById('message');
-        createMessageFunc({variables: {
-            message: inputElement.value,
-            room_id: room_id,
-            user_id: data.roomReadOne.members[0]
-        }})
-        inputElement.value = '';
-    }
-
-    return (
-    <div className="list" style={{width:"100%"}} id="room-details">
-        <h1>RoomDetails</h1>
-        <p>{data.roomReadOne.title}</p>
-        <ul>
-            {data.roomReadOne.members.map(member => <li key={member}><UserMinDetails user_id={member}/></li>)}
-        </ul>
-        <ul id="message-list">
-            {data.roomReadOne.messages.map(message=> {
-                return (
-                    <li key={message.id}>
-                        <div>
-                            {message.content}
-                        </div>
-                        <p style={{textAlign:'right', color:"grey"}}>{message.created_at}</p>
-                    </li>
-                )
-            })}
-        </ul>
-        <div className="message-input">
-            <input type="text" id="message" />
-            <div onClick={(e) =>sendMessage(e)}>
-                Send
             </div>
-        </div>
-        
-    </div>
-    );
+        );
+    }
 };
 
 export default RoomDetails;

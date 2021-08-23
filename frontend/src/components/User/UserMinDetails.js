@@ -2,9 +2,9 @@ import React from 'react';
 import { useQuery } from "@apollo/client";
 import { getUserMin } from '../../queries/queries';
 
-const UserMinDetails = ({user_id}) => {
-    const {loading, error, data} = useQuery(getUserMin, {
-        variables: {user_id},
+const UserMinDetails = ({ userID }) => {
+    const { loading, error, data } = useQuery(getUserMin, {
+        variables: { user_id: userID },
     });
 
     if (loading) {
@@ -15,9 +15,9 @@ const UserMinDetails = ({user_id}) => {
     }
 
     return (
-    <div id="user-details">
-        <p>{data.userReadOne.name}</p>
-    </div>
+        <div id="user-details">
+            <p>{data.userReadOne.name}</p>
+        </div>
     );
 };
 

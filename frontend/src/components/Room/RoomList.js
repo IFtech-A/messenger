@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import { getAllRooms } from '../../queries/queries';
 import RoomDetails from './RoomDetails';
 
 const RoomList = () => {
     const { loading, error, data } = useQuery(getAllRooms);
+    const [rooms, setRooms] = useState([]);
     const [roomSelected, setRoomSelected] = useState();
+
+
+    useEffect(() => {
+        if (!loading && data?.roomReadAll) setRooms(() => [...data.roomReadAll])
+        return () => {
+            setRooms(() => [])
+        }
+    }, [loading, data?.roomReadAll])
+
+    const onRoomSelect = (room) => {
+        setRoomSelected(() => room)
+    }
 
     if (loading) {
         return <p>Loading...</p>;
@@ -14,20 +27,16 @@ const RoomList = () => {
         return <p>Error: {error.message}</p>;
     }
 
-    const onRoomSelect = (room_id) => {
-        setRoomSelected(room_id)
-    }
-
     return (
         <div className="opening-list">
             <div className="list" id="user-list">
                 <h1>Rooms</h1>
                 <ul >
-                    {data.roomReadAll.map(room => <li key={room.id} onClick={() => onRoomSelect(room.id)}>{room.title}</li>)}
+                    {rooms.map(room => <li key={room.id} onClick={() => onRoomSelect(room)}>{room.title}</li>)}
                 </ul>
             </div>
-            <div style={{width:"50%"}}>
-                {roomSelected && <RoomDetails room_id={roomSelected} />}
+            <div style={{ width: "50%" }}>
+                {roomSelected && <RoomDetails {...roomSelected} />}
             </div>
         </div>
     );
