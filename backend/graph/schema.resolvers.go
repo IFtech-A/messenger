@@ -19,6 +19,14 @@ func (r *messageResolver) CreatedAt(ctx context.Context, obj *model.Message) (st
 	return obj.CreatedAt.Format(defaultTimeFormat), nil
 }
 
+func (r *mutationResolver) Login(ctx context.Context, username string) (*model.User, error) {
+	users, err := store.ReadUsers(bson.M{"name": username})
+	if err != nil {
+		return nil, err
+	}
+	return users[0], nil
+}
+
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	user := new(model.User)
 	user.Name = input.Name

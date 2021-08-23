@@ -66,6 +66,7 @@ input NewMessage {
 
 type Mutation {
 
+  login(username: String!): User
   createUser(input: NewUser!): User
 
   createRoom(input: NewRoom!): Room

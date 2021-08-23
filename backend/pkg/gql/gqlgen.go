@@ -4,7 +4,6 @@ import (
 	"backend/graph"
 	"backend/graph/generated"
 	"backend/pkg/store"
-	"log"
 	"net/http"
 	"time"
 
@@ -87,6 +86,9 @@ func (s *Server) Start() error {
 
 	s.configureRouter()
 
-	log.Printf("connect to http://%v/ for GraphQL playground", s.config.Addr)
+	logrus.Info("Connect to http://%v/ for GraphQL Playground", s.config.Addr)
+	logrus.Info("Graphql endpoints for queries and mutations are at http://%v/query", s.config.Addr)
+	logrus.Info("Graphql endpoint for subscriptions is at http://%v/subscriptions", s.config.Addr)
+
 	return s.server.Start(s.config.Addr)
 }
