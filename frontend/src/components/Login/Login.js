@@ -1,10 +1,12 @@
 import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import { createUser, loginByName } from '../../queries/queries'
+import { Redirect } from 'react-router-dom';
 
 const Login = () => {
 
     const [name, setName] = useState("")
+    const [loggedIn, setLoggedIn] = useState(false)
     const [loginFunc] = useMutation(loginByName, {
         variables: { name },
         onCompleted: (data) => { 
@@ -13,12 +15,12 @@ const Login = () => {
                 return
             }
             localStorage.setItem("userID", data.login.id);
-            localStorage.setItem("userName", data.login.name) 
+            localStorage.setItem("userName", data.login.name);
+            setLoggedIn(()=>true);
         },
     })
     const [signUpFunc] = useMutation(createUser, {
         variables: { newUser: { name } },
-
         onCompleted: ({ createUser }) => { localStorage.setItem("userID", createUser.id); localStorage.setItem("userName", createUser.name); setLoginState(()=>false) },
     })
     const [loginState, setLoginState] = useState(true)
@@ -39,7 +41,10 @@ const Login = () => {
 
 
     }
-
+    if (loggedIn) {
+        return <Redirect to="/" />
+    }
+    
     return (
         <div>
             <h3>{loginState?"Login":"Sign up"}</h3>

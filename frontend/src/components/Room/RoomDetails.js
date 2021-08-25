@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import { getRoom, createMessage, onCreateMessage } from '../../queries/queries';
-import UserMinDetails from '../User/UserMinDetails';
-import { Message } from '../Message/Message';
+import { ChatRoomHeader } from './ChatRoomHeader';
+import { ChatRoomMessages } from './ChatRoomMessages';
+import { ChatRoomInputField } from './ChatRoomInputField';
 
 const RoomDetails = ({ id, title }) => {
     //queries
@@ -11,14 +12,13 @@ const RoomDetails = ({ id, title }) => {
     const [createMessageFunc] = useMutation(createMessage)
 
     //States
-    const [room, setRoom] = useState({ id, title, members: [] })
     const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState("")
+    // const [newMessage, setNewMessage] = useState("")
+    const [userID, setUserID] = useState('')
 
 
     useEffect(() => {
         if (!loading) {
-            if (data?.roomReadOne) setRoom(room => { return { ...room, members: data.roomReadOne.members, title: data.roomReadOne.title } })
             if (data?.roomReadOne.messages) setMessages(m => [...m, ...data.roomReadOne.messages])
         }
         return () => setMessages(() => []);
@@ -27,24 +27,26 @@ const RoomDetails = ({ id, title }) => {
     useEffect(() => {
         if (!subLoading && subData?.onMessageCreate) setMessages(m => [...m, subData.onMessageCreate])
     }, [subData?.onMessageCreate, subLoading])
+    
+    useLayoutEffect(() => {setUserID(()=>localStorage.getItem('userID'))}, [])
 
-    const sendMessage = (e) => {
-        e.preventDefault();
-        if (newMessage === "") {
+
+    const sendMessage = (message) => {
+        // e.preventDefault();
+        if (message === "") {
             return;
         }
 
         createMessageFunc({
             variables: {
                 newMessage: {
-                    content: newMessage,
+                    content: message,
                     roomID: id,
-                    userID: room.members[0],
+                    userID: userID,
                     createdAt: new Date()
                 }
             }
         });
-        setNewMessage(() => "");
     }
 
     if (loading) {
@@ -52,19 +54,10 @@ const RoomDetails = ({ id, title }) => {
     } else {
         return (
 
-            <div className="list" style={{ width: "100%" }} id="room-details">
-                <h1>RoomDetails</h1>
-                <p>{title}</p>
-                <ul>
-                    {room.members.map(member => <li key={member}><UserMinDetails userID={member} /></li>)}
-                </ul>
-                <ul id="message-list">
-                    {messages.map(message => <li key={message.id}><Message {...message} /></li>)}
-                </ul>
-                <div className="message-input">
-                    <input type="text" id="message" value={newMessage} onInput={(e) => setNewMessage(() => e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') { sendMessage(e); } }} />
-                    <div onClick={sendMessage}>Send</div>
-                </div>
+            <div className="chat-room" >
+                <ChatRoomHeader title={title} mainPic="https://www.randomkittengenerator.com/cats/44190.jpg" />
+                <ChatRoomMessages messages={messages} />
+                <ChatRoomInputField messageProc={sendMessage} />
 
             </div>
         );

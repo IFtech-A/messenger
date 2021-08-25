@@ -4,6 +4,28 @@
   padding-bottom: 20px;
 }
 
+
+.opening-list {
+  width: 100%;
+  display: flex;
+  text-align: left;
+}
+
+.opening-list p{
+  padding: 0;
+  margin: 0;
+}
+
+.message-list {
+  display: block;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+
+  background-color: darkgrey;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
 .list {
   width: 50%;
   padding: 0;
@@ -25,43 +47,3 @@
   color: #880E4f;
 }
 
-.opening-list {
-  width: 100%;
-  display: flex;
-
-}
-
-#message-list {
-  display: block;
-  padding: 5px;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-  margin-top: 10px;
-}
-#message-list li {
-  text-align: left;
-  padding:0;
-  margin: 5px 0 0 0;
-  color: black;
-  border: 1px solid black;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3)
-}
-#message-list div {
-  margin: 10px 0 0 10px;
-}
-
-.message-input input{
-  width: 75%;
-  height: 30px;
-  margin:0;
-  justify-content: center;
-}
-.message-input div{
-  cursor: pointer;
-  display: inline-block;
-  justify-content: center;
-  text-align: right;
-  width: 20%;
-  margin: 0;
-  height: 30px;
-  border: 1px solid black;
-}

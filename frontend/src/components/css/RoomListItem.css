@@ -1,0 +1,11 @@
+.room-list-item {
+    padding: 0;
+}
+
+.room-list-item-content {
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center;
+  margin: 5px;
+}

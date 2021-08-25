@@ -1,0 +1,21 @@
+.message-list-item {
+    margin: 5px 0 0 5px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    width: fit-content;
+    background-color: cadetblue;
+    padding: 5px 10px 5px 10px;
+}
+  
+.message-list-item-content {
+    color: whitesmoke;
+}
+  
+#message-list-item-date {
+    color: darkslategray;
+    font-size: 12px;
+    align-self: flex-end;
+    margin-left: 15px;
+}
+  

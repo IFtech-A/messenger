@@ -73,10 +73,17 @@ export const getUserMin = gql`
 `
 
 export const getAllRooms = gql`
-  query AllRooms {
-    roomReadAll {
+  query AllRooms ($userID: ID!){
+    roomReadAll(userID: $userID) {
         id
         title
+        lastMessage {
+          content
+          createdAt
+          user {
+            name
+          }
+        }
     }  
   }
 `
