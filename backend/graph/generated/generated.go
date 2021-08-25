@@ -53,6 +53,7 @@ type ComplexityRoot struct {
 		CreatedAt func(childComplexity int) int
 		ID        func(childComplexity int) int
 		RoomID    func(childComplexity int) int
+		User      func(childComplexity int) int
 		UserID    func(childComplexity int) int
 	}
 
@@ -108,6 +109,8 @@ type ComplexityRoot struct {
 }
 
 type MessageResolver interface {
+	User(ctx context.Context, obj *model.Message) (*model.User, error)
+
 	CreatedAt(ctx context.Context, obj *model.Message) (string, error)
 }
 type MutationResolver interface {
@@ -187,6 +190,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Message.RoomID(childComplexity), true
+
+	case "Message.user":
+		if e.complexity.Message.User == nil {
+			break
+		}
+
+		return e.complexity.Message.User(childComplexity), true
 
 	case "Message.userID":
 		if e.complexity.Message.UserID == nil {
@@ -579,6 +589,7 @@ type Message {
   id: ID!
   roomID: ID!
   userID: ID!
+  user: User!
   content: String!
   createdAt: String!
 }
@@ -1034,6 +1045,41 @@ func (ec *executionContext) _Message_userID(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Message_user(ctx context.Context, field graphql.CollectedField, obj *model.Message) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Message",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Message().User(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖbackendᚋpkgᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Message_content(ctx context.Context, field graphql.CollectedField, obj *model.Message) (ret graphql.Marshaler) {
@@ -3607,6 +3653,20 @@ func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "user":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Message_user(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "content":
 			out.Values[i] = ec._Message_content(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

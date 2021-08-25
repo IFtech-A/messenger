@@ -15,8 +15,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+func (r *messageResolver) User(ctx context.Context, obj *model.Message) (*model.User, error) {
+	return store.ReadUser(obj.UserID)
+}
+
 func (r *messageResolver) CreatedAt(ctx context.Context, obj *model.Message) (string, error) {
-	return obj.CreatedAt.Format(defaultTimeFormat), nil
+	return obj.CreatedAt.UTC().Format(defaultTimeFormat), nil
 }
 
 func (r *mutationResolver) Login(ctx context.Context, username string) (*model.User, error) {
@@ -90,7 +94,7 @@ func (r *mutationResolver) DeleteRoom(ctx context.Context, id string) (*model.Ro
 }
 
 func (r *mutationResolver) CreateMessage(ctx context.Context, input model.NewMessage) (*model.Message, error) {
-	t, err := time.Parse(time.RFC1123, input.CreatedAt)
+	t, err := time.Parse(time.RFC3339Nano, input.CreatedAt)
 	if err != nil {
 		logrus.Error("parsing createAt failed: using server now() time")
 		t = time.Now()
@@ -167,7 +171,6 @@ func (r *roomResolver) UpdatedAt(ctx context.Context, obj *model.Room) (string, 
 }
 
 func (r *roomResolver) LastMessage(ctx context.Context, obj *model.Room) (*model.Message, error) {
-	logrus.Info("find last message of room:", obj.ID)
 	message, err := store.ReadRoomLastMessage(obj.ID)
 	if err != nil {
 		logrus.Error(err)
