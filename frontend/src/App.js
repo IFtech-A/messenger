@@ -4,7 +4,7 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-import RoomList from './components/Room/RoomList';
+import RoomList from './components/ChatRoom/ChatRoomList';
 import { splitLink } from './queries/queries';
 import Login from './components/Login/Login';
 import {

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import '../css/ChatRoomInputField.css';
+import '../css/ChatRoom/ChatRoomInputField.css';
 
 export const ChatRoomInputField = ({messageProc}) => {
     const [newMessage, setNewMessage] = useState("")

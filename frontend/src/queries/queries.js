@@ -99,6 +99,10 @@ query FindRoom($id: ID!){
             userID
             content
             createdAt
+            user {
+              id
+              name
+            }
         }
     }
 }

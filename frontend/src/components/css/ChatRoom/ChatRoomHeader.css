@@ -7,6 +7,7 @@
     max-width: 100%;
     margin-right: 10px;
     margin-bottom: 0;
+    background-color: darkcyan;
   }
   
   .chat-room-header {
@@ -18,9 +19,7 @@
     justify-content: flex-start;
     align-items: center;
     color: whitesmoke;
-    background-color:darkcyan;
     box-shadow: inset;
-    border-top-left-radius: 5px;
     border-top-right-radius: 5px;
   }
   .chat-room-header img{

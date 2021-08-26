@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/ChatRoomHeader.css';
+import '../css/ChatRoom/ChatRoomHeader.css';
 
 export const ChatRoomHeader = ({mainPic, title}) => {
     return (

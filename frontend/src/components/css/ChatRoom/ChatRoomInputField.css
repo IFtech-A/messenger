@@ -8,16 +8,16 @@
     height: 40px;
   }
   .message-input-field {
-    width: 95%;
+    flex: 19;
     margin:0;
     align-items: center;
     justify-content: center;
   
   }
+
+
   .message-input-field input {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+
     color: whitesmoke;
     background-color: darkcyan;
     width: 100%;
@@ -34,13 +34,12 @@
   .message-input-field-btn{
     display: flex;    
     cursor: pointer;
-    
-    width: 5%;
+    flex: 1;
+
     height: 100%;
     margin-left: 5px;
     border-left: 2px solid darkslategray;
     justify-content: center;
     align-items: center;
-
   }
   
