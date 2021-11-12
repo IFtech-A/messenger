@@ -4,13 +4,13 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-import RoomList from './components/ChatRoom/ChatRoomList';
 import { splitLink } from './queries/queries';
-import Login from './components/Login/Login';
+import Main from './Pages/Main/Main';
 import {
   Route,
   BrowserRouter as Router, Switch,
 } from 'react-router-dom';
+import Signin from './Pages/Signin/Signin';
 
 const client = new ApolloClient({
   link: splitLink,
@@ -26,10 +26,12 @@ function App() {
         <div className="App">
           <Switch>
             <Route exact path="/">
-              <RoomList />
+              {/* <RoomList /> */}
+              <Main />
             </Route>
             <Route exact path="/login">
-              <Login />
+              {/* <Login /> */}
+              <Signin />
             </Route>
           </Switch>
 

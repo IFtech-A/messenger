@@ -1,6 +1,16 @@
 import React from 'react'
 import '../css/Message/Message.css'
 
+export const NewMessage = ({id, content, user, userSelf}) => {
+    const className = 'message ' + (userSelf ? 'message__self' : 'message__pair')
+    return (
+        <div className={className}>
+            {content}
+        </div>
+    )
+
+}
+
 export const Message = ({ id, content, createdAt, loginUser, user }) => {
 
     let theUser = {}
