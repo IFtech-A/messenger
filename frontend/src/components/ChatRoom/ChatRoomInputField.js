@@ -23,6 +23,7 @@ export const ChatRoomInputField = ({messageProc}) => {
             </span>
             <span onClick={sendMessage} className="message-input-field-btn">
                 <FontAwesomeIcon icon={faPaperPlane} style={{color: "#880E4f"}}/>
+                
             </span>
         </div>
     )

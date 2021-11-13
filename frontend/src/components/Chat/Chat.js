@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import '../css/ChatRoom/ChatRoomContainer.css'
 import { MessageGroup } from '../Message/MessagesList'
 import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { createMessage, getRoom, onCreateMessage } from '../../queries/queries';
+import ChatHeader from './Header';
+import ChatFooter from './Footer';
 
-const Chat = ({user, roomID, roomTitle}) => {
+const Chat = ({ user, roomID, roomTitle }) => {
 
     // queries
-    const {loading, data:roomData}  = useQuery(getRoom, {variables: {id: roomID}});
-    const {data: subscriptionData, loading: subscriptionLoading} = useSubscription(onCreateMessage, {variables: {id : roomID}});
+    const { loading, data: roomData } = useQuery(getRoom, { variables: { id: roomID } });
+    const { data: subscriptionData, loading: subscriptionLoading } = useSubscription(onCreateMessage, { variables: { id: roomID } });
     const [createMessageFunc] = useMutation(createMessage);
 
     // states
@@ -20,17 +22,17 @@ const Chat = ({user, roomID, roomTitle}) => {
             if (roomData?.roomReadOne.messages) setMessages(() => [...roomData.roomReadOne.messages])
         }
         return () => {
-            setMessages(()=>[]);
+            setMessages(() => []);
         }
     }, [loading, roomData?.roomReadOne]);
 
     useEffect(() => {
         if (!subscriptionLoading && subscriptionData?.onMessageCreate) {
             console.log(subscriptionData.onMessageCreate);
-            setMessages(m=> [...m, subscriptionData.onMessageCreate]);
+            setMessages(m => [...m, subscriptionData.onMessageCreate]);
         }
         return () => {
-            
+
         }
     }, [subscriptionData?.onMessageCreate, subscriptionLoading]);
 
@@ -43,7 +45,7 @@ const Chat = ({user, roomID, roomTitle}) => {
 
         createMessageFunc({
             variables: {
-                newMessage : {
+                newMessage: {
                     content: message,
                     roomID,
                     userID: user.id,
@@ -55,21 +57,19 @@ const Chat = ({user, roomID, roomTitle}) => {
 
     return (
         <section className='chat--container'>
-            <div className='chat--header'>
-                {roomTitle}
-            </div>
+            {roomData && roomData.roomReadOne && <ChatHeader chatRoom={roomData?.roomReadOne} />}
             <div className='chat--body'>
                 {
-                    loading ? 
-                    <div>Loading...</div>
-                    :
-                    messageGroups.map((group, i) =>
-                        <MessageGroup key={i} timeGroup={group.time} messages={group.messages} user={user} />
-                    )
+                    loading ?
+                        <div>Loading...</div>
+                        :
+                        messageGroups.map((group, i) =>
+                            <MessageGroup key={i} timeGroup={group.time} messages={group.messages} user={user} />
+                        )
                 }
             </div>
-            <div className='chat--footer'>
-
+            <div className='chat--footer' style={{backgroundColor:'transparent'}}>
+                <ChatFooter />
             </div>
         </section>
     )

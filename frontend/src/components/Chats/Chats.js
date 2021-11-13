@@ -10,8 +10,7 @@ const Chats = (props) => {
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            minWidth: '400px',
-            maxWidth: '720px',
+            width: "360px",
             padding: '5px',
             borderRight: '1px solid rgba(0, 0, 0, 50%)',
         }}>
