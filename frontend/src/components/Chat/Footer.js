@@ -1,10 +1,25 @@
 import React, { useState } from 'react'
 import SendIcon from '@mui/icons-material/Send';
 import '../css/ChatRoom/ChatRoomInputField.css';
-import CustomInput from '../InputField/InputField';
+import { IconButton, InputBase } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
+const useStyles = makeStyles((theme) => {
+    return {
+        inputField: {
+            padding: theme.spacing(1),
+            border: '1px solid',
+            borderColor: theme.palette.text.secondary,
+            borderRadius: '20px',
+            backgroundColor: theme.palette.grey[300],
+            marginBottom: theme.spacing(1),
+        }
+    }
+})
 
 const ChatFooter = ({ messageProc }) => {
+
+    const classes = useStyles();
     const [newMessage, setNewMessage] = useState('')
 
     const onInputEnterKey = (e) => {
@@ -26,31 +41,23 @@ const ChatFooter = ({ messageProc }) => {
     }
 
     const onChangeInput = (e) => {
+        console.log(e)
         setNewMessage(e.target.value);
     }
     return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-        }}>
-            <div style={{ margin: '0 8px', width: '-webkit-fill-available' }}>
-                <CustomInput
-                    placeholder="Write a message..."
-                    value={newMessage}
-                    onChange={onChangeInput}
-                    onKeyPress={onInputEnterKey} />
-            </div>
-            <SendIcon
-                sx={{
-                    width: '36px',
-                    height: '36px',
-                    mr: '10px',
-                    p: '4px'
-                }}
-                color="primary"
-                onClick={sendMessage} />
-        </div>
+       
+            <InputBase
+                className={classes.inputField}
+                value={newMessage}
+                onChange={onChangeInput}
+                aria-label="New message"
+                placeholder="Write a message..."
+                fullWidth
+                endAdornment={
+                    <IconButton color="primary">
+                        <SendIcon />
+                    </IconButton>
+                } />
     )
 }
 

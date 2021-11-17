@@ -1,10 +1,24 @@
 import { SearchOutlined } from '@mui/icons-material'
-import { InputAdornment, TextField } from '@mui/material'
-import { borderRadius } from '@mui/system'
+import { InputBase } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
-import CustomInput from '../InputField/InputField'
+
+const useStyles = makeStyles((theme) => {
+    return {
+        searchBar: {
+            border: '1px solid',
+            borderColor: theme.palette.text.secondary,
+            borderRadius: '20px',
+            padding: '5px',
+            backgroundColor: theme.palette.grey[300]
+        }
+    }
+})
+
 
 const Search = () => {
+
+    const classes = useStyles();
     const [query, setQuery] = useState('')
 
     const onChangeSearchQuery = (e) => {
@@ -13,32 +27,17 @@ const Search = () => {
     }
     return (
         <div style={{ display: 'flex', alignItems: 'center', margin: '8px 4px' }}>
-            {/* <TextField
-                variant="outlined"
-                sx={{
-                    m: '5px auto',
-                    width: '95%',
-                }}
+            
+            <InputBase
+                className={classes.searchBar}
                 value={query}
                 onChange={onChangeSearchQuery}
-                placeholder='Search Messenger'
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment>
-                            <SearchOutlined />
-                        </InputAdornment>
-                    )
-                }}
-            /> */}
-            <InputAdornment sx={{mr: '5px'}}><SearchOutlined /></InputAdornment>
-            <div style={{ width: '-webkit-fill-available' }}>
-                <CustomInput
-                    value={query}
-                    onChange={onChangeSearchQuery}
-                    aria-label="Message search"
-                    placeholder="Search messages..."
-                />
-            </div>
+                aria-label="Message search"
+                placeholder="Search messages..."
+                fullWidth
+                startAdornment={
+                    <SearchOutlined />
+                } />
 
         </div>
     )

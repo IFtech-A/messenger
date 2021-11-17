@@ -11,6 +11,10 @@ import {
   BrowserRouter as Router, Switch,
 } from 'react-router-dom';
 import Signin from './Pages/Signin/Signin';
+import { createTheme } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+
+const theme = createTheme();
 
 const client = new ApolloClient({
   link: splitLink,
@@ -23,6 +27,7 @@ function App() {
     <Router>
 
       <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
         <div className="App">
           <Switch>
             <Route exact path="/">
@@ -36,6 +41,7 @@ function App() {
           </Switch>
 
         </div>
+        </ThemeProvider>
       </ApolloProvider>
     </Router>
   );

@@ -32,15 +32,12 @@ const Signin = () => {
     const handleSubmit = event => {
         event.preventDefault();
         
-        const data = new FormData(event.currentTarget);
-        const name = data.get('name');
-        console.log('name: ', name);
-        if (name === "") {
+        if (username === "") {
             return;
         }
-        setUsername(name);
         
         console.log('name: ', username);
+        
 
         loginFunc();
 
@@ -69,6 +66,8 @@ const Signin = () => {
                     </Typography>
                     <Box component='form' onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField 
+                            value={username}
+                            onChange={e=>setUsername(e.target.value)}
                             margin='normal'
                             required
                             fullWidth
@@ -76,7 +75,7 @@ const Signin = () => {
                             label='Full name'
                             name='name'
                             autoComplete='full name'
-                            autofocus
+                            autoFocus
                         />
                         <Button
                             type='submit'

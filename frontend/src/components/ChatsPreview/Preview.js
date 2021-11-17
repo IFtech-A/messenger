@@ -13,9 +13,6 @@ const previewStyle = {
     },
     width: 'calc(100% - 16px)',
     borderRadius: '5px',
-    whiteSpace: 'nowrap',
-    textOverflow:'ellipsis',
-    overflow:'hidden',
     textAlign: 'start',
     p: '5px',
     mt: '2px',
@@ -37,10 +34,6 @@ const previewTextBoxStyle = {
     width: '-webkit-fill-available',
 } 
 
-const overflowTextStyle = {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-}
 
 const Preview = ({ user, chatRoom, onRoomSelected }) => {
     return (
@@ -54,15 +47,15 @@ const Preview = ({ user, chatRoom, onRoomSelected }) => {
             <Box
                 sx={previewTextBoxStyle}>
                 <Typography
-                    sx={overflowTextStyle}
+                    noWrap
                     variant='subtitle1'
-                    component='subtitle1'>
+                    component='p'>
                     {chatRoom.title}
                 </Typography>
                 <Typography
-                    sx={overflowTextStyle}
-                    variant='subtitle2'
-                    component='subtitle2'>
+                    noWrap
+                    variant='caption'
+                    component='p'>
                     {chatRoom?.lastMessage.content}
                 </Typography>
              </Box>

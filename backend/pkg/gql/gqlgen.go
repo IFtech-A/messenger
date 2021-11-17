@@ -86,9 +86,9 @@ func (s *Server) Start() error {
 
 	s.configureRouter()
 
-	logrus.Info("Connect to http://%v/ for GraphQL Playground", s.config.Addr)
-	logrus.Info("Graphql endpoints for queries and mutations are at http://%v/query", s.config.Addr)
-	logrus.Info("Graphql endpoint for subscriptions is at http://%v/subscriptions", s.config.Addr)
+	logrus.Infof("Connect to http://%v/ for GraphQL Playground", s.config.Addr)
+	logrus.Infof("Graphql endpoints for queries and mutations are at http://%v/query", s.config.Addr)
+	logrus.Infof("Graphql endpoint for subscriptions is at http://%v/subscriptions", s.config.Addr)
 
 	return s.server.Start(s.config.Addr)
 }
