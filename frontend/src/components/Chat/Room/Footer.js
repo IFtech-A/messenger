@@ -1,63 +1,60 @@
 import React, { useState } from 'react'
 import SendIcon from '@mui/icons-material/Send';
-import '../css/ChatRoom/ChatRoomInputField.css';
-import { IconButton, InputBase } from '@mui/material';
+import { IconButton, InputBase, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => {
     return {
         inputField: {
             padding: theme.spacing(1),
-            border: '1px solid',
-            borderColor: theme.palette.text.secondary,
-            borderRadius: '20px',
+            border: 'none',
+            borderRadius: theme.spacing(4),
+            boxSizing: 'border-box',
             backgroundColor: theme.palette.grey[300],
-            marginBottom: theme.spacing(1),
+
+        },
+        container: {
+            backgroundColor: 'transparent',
+            padding: theme.spacing(.5),
         }
     }
 })
 
-const ChatFooter = ({ messageProc }) => {
+const ChatFooter = ({ onMessageSend }) => {
 
     const classes = useStyles();
-    const [newMessage, setNewMessage] = useState('')
+    const [message, setMessage] = useState('')
 
-    const onInputEnterKey = (e) => {
-        if (e.key === 'Enter') {
-            return;
-        }
-        e.preventDefault();
-        sendMessage();
-    }
     const sendMessage = () => {
-        if (newMessage === "") {
+        if (message === "") {
             return;
         }
 
-        messageProc(newMessage)
+        onMessageSend(message)
 
-        setNewMessage("");
+        setMessage("");
 
     }
 
     const onChangeInput = (e) => {
         console.log(e)
-        setNewMessage(e.target.value);
+        setMessage(e.target.value);
     }
     return (
-       
+        <Box component="div" className={classes.container}>
             <InputBase
                 className={classes.inputField}
-                value={newMessage}
+                value={message}
                 onChange={onChangeInput}
                 aria-label="New message"
                 placeholder="Write a message..."
                 fullWidth
                 endAdornment={
-                    <IconButton color="primary">
+                    <IconButton color="primary" onClick={sendMessage}>
                         <SendIcon />
                     </IconButton>
                 } />
+        </Box>
     )
 }
 

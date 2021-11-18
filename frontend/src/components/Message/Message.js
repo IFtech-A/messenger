@@ -1,36 +1,61 @@
+import { makeStyles } from '@mui/styles'
+import { Typography } from '@mui/material'
 import React from 'react'
 import '../css/Message/Message.css'
 
-export const NewMessage = ({id, content, user, userSelf}) => {
-    const className = 'message ' + (userSelf ? 'message__self' : 'message__pair')
-    return (
-        <div className={className}>
-            {content}
-        </div>
-    )
-
-}
-
-export const Message = ({ id, content, createdAt, loginUser, user }) => {
-
-    let theUser = {}
-    if (user?.id === loginUser.id) {
-        theUser.alignSelf = 'flex-end';
-        theUser.borderTopRightRadius = 0;
-        theUser.borderBottomRightRadius = 0;
-        theUser.borderTopLeftRadius = '10px';
-        theUser.borderBottomLeftRadius = '10px';
-        theUser.marginRight = '5px';
+const useStyles = makeStyles(theme => {
+    return {
+        message: {
+            wordBreak: 'break-all',
+            wordWrap: 'break-word',
+            maxWidth: '80%',
+            fontSize: '18px',
+            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+            lineHeight: 1.5,
+            fontWeight: 200,
+            margin: theme.spacing(0.5,0.5,0,0.5),
+            textAlign: isSelf => isSelf ? 'end' : 'start',
+            color: (isSelf) => {
+                return isSelf ? 'rgba(255,255,255,95%)' : 'rgba(0,0,0, 95%)';
+            },
+            alignSelf: isSelf => {
+                return isSelf ? 'flex-end' : 'flex-start';
+            },
+            borderRadius: isSelf => {
+                if (isSelf) {
+                    return theme.spacing(3, 0, 0, 3);
+                }
+                return theme.spacing(0,3,3,0);
+            },
+            backgroundColor: isSelf => isSelf ? theme.palette.primary.main : '#c7ced1',
+            '&:first-child': {
+                borderTopRightRadius: isSelf => {
+                    if (isSelf) return theme.spacing(3)
+                },
+                borderTopLeftRadius: isSelf => {
+                    if (!isSelf) return theme.spacing(3);
+                },
+            },
+            '&:last-child': {
+                borderBottomRightRadius: isSelf => {
+                    if (isSelf) return theme.spacing(3);
+                },
+                borderBottomLeftRadius: isSelf => {
+                    if (!isSelf) return theme.spacing(3);
+                },
+            },
+            
+        }
     }
+})
 
+export const Message = ({ id, content, user, userSelf: isSelf }) => {
+    const classes = useStyles(isSelf)
     return (
-        <div className="message-list-item" style={theUser}>
-            <div className="message-list-item-content">
-                {content}
-            </div>
-            <span id="message-list-item-date">
-                {new Date(createdAt).toLocaleString()}
-            </span>
-        </div>
+        <Typography className={classes.message}>
+            {content}
+        </Typography>
     )
 }
+
+export default Message;

@@ -5,12 +5,12 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 import { splitLink } from './queries/queries';
-import Main from './Pages/Main/Main';
+import Main from './Pages/Main';
 import {
   Route,
   BrowserRouter as Router, Switch,
 } from 'react-router-dom';
-import Signin from './Pages/Signin/Signin';
+import Signin from './Pages/Signin';
 import { createTheme } from '@mui/material';
 import { ThemeProvider } from '@mui/material';
 
@@ -27,20 +27,20 @@ function App() {
     <Router>
 
       <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <div className="App">
-          <Switch>
-            <Route exact path="/">
-              {/* <RoomList /> */}
-              <Main />
-            </Route>
-            <Route exact path="/login">
-              {/* <Login /> */}
-              <Signin />
-            </Route>
-          </Switch>
+        <ThemeProvider theme={theme}>
+          <div className="App">
+            <Switch>
+              <Route exact path="/">
+                {/* <RoomList /> */}
+                <Main />
+              </Route>
+              <Route exact path="/login">
+                {/* <Login /> */}
+                <Signin />
+              </Route>
+            </Switch>
 
-        </div>
+          </div>
         </ThemeProvider>
       </ApolloProvider>
     </Router>
