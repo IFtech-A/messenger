@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../../css/ChatRoom/ChatRoomContainer.css";
 import { MessageGroup } from "../../Message/MessagesList";
-import { useMutation, useQuery, useSubscription } from "@apollo/client";
-import {
-  createMessage,
-  getRoom,
-  onCreateMessage,
-} from "../../../queries/queries";
 import ChatHeader from "./Header";
 import ChatFooter from "./Footer";
 import { makeStyles } from "@mui/styles";
@@ -30,84 +24,29 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const Chat = ({ user, roomID, roomTitle }) => {
+const Chat = ({ user, roomData, messages, onMessageSendClick, loading }) => {
   const classes = useStyles();
 
-  // queries
-  const { loading, data: roomData } = useQuery(getRoom, {
-    variables: { id: roomID },
-  });
-  const { data: subscriptionData, loading: subscriptionLoading } =
-    useSubscription(onCreateMessage, { variables: { id: roomID } });
-  const [createMessageFunc] = useMutation(createMessage);
-
-  // states
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    if (!loading) {
-      if (roomData?.roomReadOne.messages)
-        setMessages(() => [...roomData.roomReadOne.messages]);
-    }
-    return () => {
-      setMessages(() => []);
-    };
-  }, [loading, roomData?.roomReadOne]);
-
-  useEffect(() => {
-    if (!subscriptionLoading && subscriptionData?.onMessageCreate) {
-      console.log(subscriptionData.onMessageCreate, user);
-      if (user.id === subscriptionData.onMessageCreate.userID) {
-        subscriptionData.onMessageCreate.user = user;
-      } else {
-        subscriptionData.onMessageCreate.user = { id: subscriptionData.userID };
-      }
-      setMessages((m) => [...m, subscriptionData.onMessageCreate]);
-    }
-    return () => {};
-  }, [subscriptionData, subscriptionLoading, user]);
-
-  const messageGroups = makeMessageGroupsByMinute(messages);
-
-  const onSendMesssageClick = (message) => {
-    if (message.length === 0) {
-      return;
-    }
-
-    createMessageFunc({
-      variables: {
-        newMessage: {
-          content: message,
-          roomID,
-          userID: user.id,
-          createdAt: new Date(),
-        },
-      },
-    });
-  };
-
-  if (!roomData?.roomReadOne) {
+  if (loading || !roomData?.roomReadOne) {
     return <Typography color="info">Loading...</Typography>;
   }
+
+  const messageGroups = makeMessageGroupsByMinute(messages);
 
   return (
     <Box component="section" className={classes.roomContainer}>
       <ChatHeader chatRoom={roomData?.roomReadOne} />
       <div className={classes.roomContainerContent}>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          messageGroups.map((group, i) => (
-            <MessageGroup
-              key={i}
-              timeGroup={group.time}
-              messages={group.messages}
-              user={user}
-            />
-          ))
-        )}
+        {messageGroups.map((group, i) => (
+          <MessageGroup
+            key={i}
+            timeGroup={group.time}
+            messages={group.messages}
+            user={user}
+          />
+        ))}
       </div>
-      <ChatFooter onMessageSend={onSendMesssageClick} />
+      <ChatFooter onMessageSend={onMessageSendClick} />
     </Box>
   );
 };

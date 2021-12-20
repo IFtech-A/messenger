@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, InputBase, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -24,6 +24,7 @@ const ChatFooter = ({ onMessageSend }) => {
 
     const classes = useStyles();
     const [message, setMessage] = useState('')
+    const inputRef = useRef();
 
     const sendMessage = () => {
         if (message === "") {
@@ -36,8 +37,11 @@ const ChatFooter = ({ onMessageSend }) => {
 
     }
 
+    useEffect(() => {
+        inputRef.current.focus()
+    }, [inputRef])
+
     const onChangeInput = (e) => {
-        console.log(e)
         setMessage(e.target.value);
     }
     return (
@@ -48,6 +52,7 @@ const ChatFooter = ({ onMessageSend }) => {
                 onChange={onChangeInput}
                 aria-label="New message"
                 placeholder="Write a message..."
+                inputRef={inputRef}
                 fullWidth
                 endAdornment={
                     <IconButton color="primary" onClick={sendMessage}>
