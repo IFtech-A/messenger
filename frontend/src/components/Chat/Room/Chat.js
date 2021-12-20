@@ -1,5 +1,4 @@
 import React from "react";
-import "../../css/ChatRoom/ChatRoomContainer.css";
 import { MessageGroup } from "../../Message/MessagesList";
 import ChatHeader from "./Header";
 import ChatFooter from "./Footer";

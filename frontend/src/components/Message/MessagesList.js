@@ -1,6 +1,5 @@
 import React from 'react'
 import Message  from './Message';
-import '../css/Message/Message.css'
 import { Avatar } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 

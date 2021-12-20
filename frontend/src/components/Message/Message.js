@@ -1,7 +1,6 @@
 import { makeStyles } from "@mui/styles";
 import { Typography } from "@mui/material";
 import React from "react";
-import "../css/Message/Message.css";
 
 const useStyles = makeStyles((theme) => {
   return {
