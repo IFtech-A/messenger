@@ -13,6 +13,7 @@ import {
 import Signin from './Pages/Signin';
 import { createTheme } from '@mui/material';
 import { ThemeProvider } from '@mui/material';
+import SignUp from './Pages/Signup';
 
 const theme = createTheme();
 
@@ -20,6 +21,7 @@ const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
 })
+
 
 function App() {
 
@@ -35,8 +37,10 @@ function App() {
                 <Main />
               </Route>
               <Route exact path="/login">
-                {/* <Login /> */}
                 <Signin />
+              </Route>
+              <Route exact path="/signup">
+                <SignUp />
               </Route>
             </Switch>
 

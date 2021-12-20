@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Avatar, Typography , Box} from '@mui/material'
+import { Avatar, Typography, Box } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => {
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => {
                 justifyContent: 'flex-start',
                 boxSizing: 'border-box',
                 '&:hover': {
-                    backgroundColor: !isSelected ? '#e9e9e9': null,
+                    backgroundColor: !isSelected ? '#e9e9e9' : null,
                     cursor: 'pointer',
                 },
                 borderRadius: '5px',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => {
                 backgroundColor: isSelected ? theme.palette.grey[400] : null,
             }
         },
-        previewAvatarStyle:  {
+        previewAvatarStyle: {
             marginRight: '5px',
             alignSelf: 'flex-end',
             height: 56,
@@ -40,11 +40,11 @@ const useStyles = makeStyles(theme => {
 
 
 const Preview = ({ user, chatRoom, onRoomSelected, selectedRoom }) => {
-    const isSelected =  selectedRoom === chatRoom.id;
+    const isSelected = selectedRoom === chatRoom.id;
     const classes = useStyles(isSelected);
 
     console.log(chatRoom, isSelected)
-    
+
     return (
         <Box
             className={classes.previewStyle} onClick={(e) => onRoomSelected(chatRoom)}>
