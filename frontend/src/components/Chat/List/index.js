@@ -27,7 +27,7 @@ const ChatList = (props) => {
         <Box className={classes.chatListContainer}>
             
             {/* chats header */}
-            <Header user={props.user}/>
+            <Header user={props.user} onLogout={props.onLogout}/>
             {/* chats search */}
             <Search />
             {/* chats' preview */}

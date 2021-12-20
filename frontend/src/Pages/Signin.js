@@ -1,19 +1,16 @@
+import { useMutation } from "@apollo/client";
+import LockoutOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
-  Avatar,
-  Container,
+  Avatar, Box, Button, Container,
   CssBaseline,
   TextField,
-  Typography,
-  Button,
+  Typography
 } from "@mui/material";
-import LockoutOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { makeStyles } from "@mui/styles";
-import { Box } from "@mui/material";
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { loginByName } from "../queries/queries";
-import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { loginByName } from "../queries/queries";
 import { login, selectUser } from "../store/user/userSlice";
 
 const useStyles = makeStyles((theme) => {
